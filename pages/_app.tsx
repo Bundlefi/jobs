@@ -17,7 +17,7 @@ const components = {
 export default function Jobs({ Component, pageProps }: AppProps) {
   return (
     <MDXProvider components={components}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </MDXProvider>
   );
 }
