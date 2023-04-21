@@ -8,7 +8,7 @@ export default function Home() {
     <Pane background="tint2">
       <header>
         <Container>
-          <Hero content={{ title: "Hero", body: "This is content" }} />
+          <Hero content={{ title: "Hero", body: "This is content." }} />
         </Container>
       </header>
       <main>
