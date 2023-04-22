@@ -1,7 +1,5 @@
 // @ts-check
 
-// next.config.js
-
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
   options: {
@@ -11,13 +9,18 @@ const withMDX = require("@next/mdx")({
     remarkPlugins: [],
     rehypePlugins: [],
     providerImportSource: "@mdx-js/react",
-    // If you use `MDXProvider`, uncomment the following line.
-    // providerImportSource: "@mdx-js/react",
   },
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: false,
+  },
   output: "export",
   basePath: "/jobs",
   experimental: {

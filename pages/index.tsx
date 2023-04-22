@@ -1,14 +1,19 @@
 import { majorScale, Pane } from "evergreen-ui";
-import Container from "../src/components/container";
-import Hero from "../src/components/hero";
-import Postings from "../src/components/postings";
+import Container from "../src/components/utilities/container";
+import Hero from "../src/components/utilities/hero";
+import Postings from "../src/components/utilities/postings";
 
 export default function Home() {
   return (
     <Pane background="tint2">
       <header>
         <Container>
-          <Hero content={{ title: "Hero", body: "This is content. Please sign!!!!" }} />
+          <Hero
+            content={{
+              title: "Hero",
+              body: "This is content. Please sign!!!!",
+            }}
+          />
         </Container>
       </header>
       <main>

@@ -1,14 +1,14 @@
-import { Heading, majorScale, Pane, Spinner } from "evergreen-ui";
+import { Button, Heading, majorScale, Pane, Spinner } from "evergreen-ui";
 import fs from "fs";
-import matter from "gray-matter";
 import { GetStaticProps } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import path from "path";
-import { FC } from "react";
-import Container from "../src/components/container";
+import { FC, useState } from "react";
+import Application from "../src/components/modules/application";
+import Container from "../src/components/utilities/container";
 
 // import { posts as postsFromCMS } from "../../content";
 
@@ -29,6 +29,8 @@ interface Post {
 const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
   const router = useRouter();
 
+  const [isShown, setIsShown] = useState(false);
+
   if (router.isFallback) {
     return (
       <Pane width="100%" height="100%">
@@ -38,7 +40,7 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
   }
 
   return (
-    <Pane>
+    <Pane paddingRight={0} display="flex" flexDirection="column" height="100%">
       <Head>
         <title>{`Bundlefi Jobs | ${frontmatter.title}`}</title>
         <meta name="description" content={frontmatter.summary} />
@@ -46,7 +48,7 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
       {/* <header>
         <HomeNav />
       </header> */}
-      <main>
+      <Pane is="main" flex="1 0 auto">
         <Container>
           <Heading
             textAlign="center"
@@ -60,7 +62,30 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
             <MDXRemote {...source} />
           </Pane>
         </Container>
-      </main>
+      </Pane>
+
+      <Application {...{ isShown, setIsShown, postTitle: frontmatter.title }} />
+
+      <Pane
+        is="footer"
+        position="fixed"
+        bottom={0}
+        width="100%"
+        display="flex"
+        flexShrink={0}
+        padding={16}
+        background="tint2"
+        borderRadius={3}
+        zIndex={1}>
+        <Pane flex={1} alignItems="center" display="flex">
+          <Heading size={600}>Interested?</Heading>
+        </Pane>
+        <Pane>
+          <Button appearance="primary" onClick={() => setIsShown(true)}>
+            Apply
+          </Button>
+        </Pane>
+      </Pane>
     </Pane>
   );
 };
