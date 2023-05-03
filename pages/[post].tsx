@@ -1,6 +1,14 @@
-import { Button, Heading, majorScale, Pane, Spinner } from "evergreen-ui";
+import {
+  Badge,
+  Heading,
+  Link,
+  majorScale,
+  Pane,
+  Paragraph,
+  Spinner,
+} from "evergreen-ui";
 import fs from "fs";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import Head from "next/head";
@@ -8,17 +16,11 @@ import { useRouter } from "next/router";
 import path from "path";
 import { FC, useState } from "react";
 import Application from "../src/components/modules/application";
+import { PostFrontMatter } from "../src/components/providers/application/application.provider";
 import Container from "../src/components/utilities/container";
+import Headings from "../src/components/utilities/headings";
 
 // import { posts as postsFromCMS } from "../../content";
-
-interface PostFrontMatter<DateType = string> {
-  title: string;
-  slug: string;
-  summary: string;
-  publishedOn: DateType;
-  revisedOn: DateType;
-}
 
 type PostSource = MDXRemoteSerializeResult<unknown, PostFrontMatter>;
 
@@ -39,6 +41,16 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
     );
   }
 
+  if (source == null) {
+    return <h1>In Progress</h1>;
+  }
+
+  const jobProps = {
+    isShown,
+    setIsShown,
+    postTitle: frontmatter.title,
+  };
+
   return (
     <Pane paddingRight={0} display="flex" flexDirection="column" height="100%">
       <Head>
@@ -58,15 +70,39 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
             marginY={majorScale(3)}>
             {frontmatter.title}
           </Heading>
-          <Pane marginX="1.2rem">
+          <Pane marginX="1.2rem" marginBottom="6rem">
+            <Pane>
+              {frontmatter.tags.split(", ").map((tag, idx) => {
+                return (
+                  <Badge key={`${tag}-${idx}`} marginRight={10}>
+                    {tag}
+                  </Badge>
+                );
+              })}
+            </Pane>
+            <Pane>
+              <Headings.H2 marginLeft={0}>{`Contact:`}</Headings.H2>
+              <Paragraph>{frontmatter.contact_name}</Paragraph>
+              <Paragraph>
+                <Link
+                  href={`mailto:${encodeURI(
+                    `${frontmatter.contact_email}?Body=Hello ${
+                      frontmatter.contact_name.split(" ")[0]
+                    }.&Subject=${frontmatter.id}: ${frontmatter.title} Position`
+                  )}`}
+                  target="_blank">
+                  {frontmatter.contact_email}
+                </Link>
+              </Paragraph>
+            </Pane>
             <MDXRemote {...source} />
           </Pane>
         </Container>
       </Pane>
 
-      <Application {...{ isShown, setIsShown, postTitle: frontmatter.title }} />
+      <Application {...jobProps} />
 
-      <Pane
+      {/* <Pane
         is="footer"
         position="fixed"
         bottom={0}
@@ -85,40 +121,30 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
             Apply
           </Button>
         </Pane>
-      </Pane>
+      </Pane> */}
     </Pane>
   );
 };
 
-export async function getStaticPaths() {
-  const postsDirectory = path.join(process.cwd(), "_posts");
-  const filenames = fs.readdirSync(postsDirectory);
-  const paths = filenames.map((name) => ({
-    params: { post: name.replace(".mdx", "") },
-  }));
-
-  return { paths, fallback: false };
-}
-
-export const getStaticProps: GetStaticProps<
-  { source: PostSource },
-  { post: string }
-> = async ({ params, preview }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   let postFile;
 
   try {
-    const postPath = path.join(process.cwd(), "_posts", `${params!.post}.mdx`);
+    const postPath = path.join(
+      process.cwd(),
+      "_posts",
+      `${context.params!.post}.mdx`
+    );
+
     postFile = fs.readFileSync(postPath, "utf-8");
-  } catch {
+  } catch (error) {
     // This would be a back up of posts that might be placed
     // OR we can reach out to a CMS to full down any posts that might be stored there.
-
     // const collection = preview ? postsFromCMS.draft : postsFromCMS.published;
     // postFile = collection.find((p) => {
     //   const { data } = matter(p);
     //   return data.post === params!.post;
     // });
-
     throw new Error("no post");
   }
 
@@ -140,9 +166,7 @@ export const getStaticProps: GetStaticProps<
   };
 
   return {
-    props: {
-      source,
-    },
+    props: { source },
   };
 };
 
