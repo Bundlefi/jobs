@@ -14,7 +14,7 @@ interface BuildHeadProps {
 const buildHeading: Func<BuildHeadProps, HeadingProps> = (props) => {
   return ({ children, ...styles }) => {
     return (
-      <Heading {...styles} {...props}>
+      <Heading {...props} {...styles}>
         {children}
       </Heading>
     );

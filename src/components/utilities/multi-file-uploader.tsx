@@ -16,7 +16,7 @@ interface FileUploaderProps {
 }
 
 const MultipleFileUploader: FC<FileUploaderProps> = ({ disable }) => {
-  const acceptedMimeTypes = [MimeType.doc, MimeType.pdf];
+  const acceptedMimeTypes = [MimeType.doc, MimeType.docx, MimeType.pdf];
   const maxFiles = 2;
   const maxSizeInBytes = 50 * 1024 ** 2; // 50 MB
 
