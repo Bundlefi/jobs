@@ -21,7 +21,7 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: false,
   },
-  output: "export",
+  // output: "export",
   basePath: "/jobs",
   experimental: {
     mdxRs: true,
