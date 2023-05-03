@@ -10,24 +10,22 @@ export default function Home() {
         <Container>
           <Hero
             content={{
-              title: "Hero",
-              body: "This is content. Please sign!!!!",
+              title: "WIP",
+              body: "This is a work in progress. Patience!!!!",
             }}
           />
         </Container>
       </header>
       <main>
-        {[{ title: "Yerp", body: "This is the first posting" }].map(
-          (feature, i) => (
-            <Postings
-              key={feature.title}
-              title={feature.title}
-              body={feature.body}
-              image="/docs.png"
-              invert={i % 2 === 0}
-            />
-          )
-        )}
+        {[{ title: "", body: "" }].map((feature, i) => (
+          <Postings
+            key={feature.title}
+            title={feature.title}
+            body={feature.body}
+            image="/docs.png"
+            invert={i % 2 === 0}
+          />
+        ))}
       </main>
       <footer>
         <Pane background="overlay" paddingY={majorScale(9)}>

@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Heading,
   Link,
   majorScale,
@@ -8,7 +9,7 @@ import {
   Spinner,
 } from "evergreen-ui";
 import fs from "fs";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import Head from "next/head";
@@ -102,7 +103,7 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
 
       <Application {...jobProps} />
 
-      {/* <Pane
+      <Pane
         is="footer"
         position="fixed"
         bottom={0}
@@ -121,7 +122,7 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
             Apply
           </Button>
         </Pane>
-      </Pane> */}
+      </Pane>
     </Pane>
   );
 };
