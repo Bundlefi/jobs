@@ -1,5 +1,5 @@
 import { Heading, Pane, SideSheet, Tab, Tablist } from "evergreen-ui";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import Paragraph from "../utilities/paragraph";
 import TabSwitch from "../utilities/tab-switch";
 import AddressCard from "./address-card";
@@ -11,11 +11,18 @@ const Application: FC<{
   setIsShown: Dispatch<SetStateAction<boolean>>;
   postTitle: string;
 }> = ({ isShown, setIsShown, postTitle }) => {
-  const [selectedTab, setTab] = useState("Identity");
-  const [tabs] = useState(["Identity", "Address", "Profile", "Files"]);
+  const tabs = {
+    identity: "Identity",
+    address: "Address",
+    profile: "Profile",
+    files: "Files",
+  };
+
+  const [selectedTab, setTab] = useState(tabs.identity);
 
   return (
     <SideSheet
+      width={890}
       preventBodyScrolling
       isShown={isShown}
       onCloseComplete={() => setIsShown(false)}
@@ -35,7 +42,7 @@ const Application: FC<{
           </Pane>
           <Pane display="flex" padding={8}>
             <Tablist>
-              {tabs.map((tab) => (
+              {Object.values(tabs).map((tab) => (
                 <Tab
                   key={tab}
                   isSelected={selectedTab === tab}
@@ -48,9 +55,9 @@ const Application: FC<{
         </Pane>
         <Pane flex="1" overflowY="scroll" background="tint2" padding={16}>
           <TabSwitch tab={selectedTab}>
-            <IdentityCard id="Identity" />
-            <AddressCard id="Address" />
-            <UploadCard id="Files" />
+            <IdentityCard id={tabs.identity} />
+            <AddressCard id={tabs.address} />
+            <UploadCard id={tabs.files} />
           </TabSwitch>
         </Pane>
       </Pane>
