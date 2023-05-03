@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "evergreen-ui";
 import fs from "fs";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import Head from "next/head";
@@ -126,25 +126,35 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export async function getStaticPaths() {
+  const postsDirectory = path.join(process.cwd(), "_posts");
+  const filenames = fs.readdirSync(postsDirectory);
+  const paths = filenames.map((name) => ({
+    params: { post: name.replace(".mdx", "") },
+  }));
+
+  return { paths, fallback: false };
+}
+
+export const getStaticProps: GetStaticProps<
+  { source: PostSource },
+  { post: string }
+> = async ({ params, preview }) => {
   let postFile;
 
   try {
-    const postPath = path.join(
-      process.cwd(),
-      "_posts",
-      `${context.params!.post}.mdx`
-    );
-
+    const postPath = path.join(process.cwd(), "_posts", `${params!.post}.mdx`);
     postFile = fs.readFileSync(postPath, "utf-8");
-  } catch (error) {
+  } catch {
     // This would be a back up of posts that might be placed
     // OR we can reach out to a CMS to full down any posts that might be stored there.
+
     // const collection = preview ? postsFromCMS.draft : postsFromCMS.published;
     // postFile = collection.find((p) => {
     //   const { data } = matter(p);
     //   return data.post === params!.post;
     // });
+
     throw new Error("no post");
   }
 
@@ -166,8 +176,54 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 
   return {
-    props: { source },
+    props: {
+      source,
+    },
   };
 };
 
 export default JobPost;
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   let postFile;
+
+//   try {
+//     const postPath = path.join(
+//       process.cwd(),
+//       "_posts",
+//       `${context.params!.post}.mdx`
+//     );
+
+//     postFile = fs.readFileSync(postPath, "utf-8");
+//   } catch (error) {
+//     // This would be a back up of posts that might be placed
+//     // OR we can reach out to a CMS to full down any posts that might be stored there.
+//     // const collection = preview ? postsFromCMS.draft : postsFromCMS.published;
+//     // postFile = collection.find((p) => {
+//     //   const { data } = matter(p);
+//     //   return data.post === params!.post;
+//     // });
+//     throw new Error("no post");
+//   }
+
+//   if (!postFile) {
+//     throw new Error("no post");
+//   }
+
+//   const mdxSource = await serialize<unknown, PostFrontMatter<Date>>(postFile, {
+//     parseFrontmatter: true,
+//   });
+
+//   const source = {
+//     ...mdxSource,
+//     frontmatter: {
+//       ...mdxSource.frontmatter,
+//       publishedOn: mdxSource.frontmatter.publishedOn?.toJSON() || null,
+//       revisedOn: mdxSource.frontmatter.revisedOn?.toJSON() || null,
+//     } as PostFrontMatter,
+//   };
+
+//   return {
+//     props: { source },
+//   };
+// };
