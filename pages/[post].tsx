@@ -118,7 +118,10 @@ const JobPost: FC<Post> = ({ source, source: { frontmatter } }) => {
           <Heading size={600}>Interested?</Heading>
         </Pane>
         <Pane>
-          <Button appearance="primary" onClick={() => setIsShown(true)}>
+          <Button
+            disabled
+            appearance="primary"
+            onClick={() => setIsShown(true)}>
             Apply
           </Button>
         </Pane>
