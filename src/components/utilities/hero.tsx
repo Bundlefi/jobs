@@ -1,9 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { Pane, Heading, Paragraph, majorScale } from "evergreen-ui";
 
-const Hero: FC<{ content: { title: string; body: string } }> = ({
-  content,
-}) => {
+interface HeroProps extends PropsWithChildren {
+  content: { title: string; body: string };
+}
+
+const Hero: FC<HeroProps> = ({ children, content }) => {
   return (
     <Pane
       width="100%"
@@ -23,6 +25,7 @@ const Hero: FC<{ content: { title: string; body: string } }> = ({
           lineHeight="clamp(1.2rem, 4vw, 2rem)">
           {content.body}
         </Paragraph>
+        {children}
       </Pane>
     </Pane>
   );

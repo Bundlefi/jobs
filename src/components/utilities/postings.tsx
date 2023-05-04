@@ -2,39 +2,45 @@ import React, { FC } from "react";
 import { Pane, Heading, Paragraph, majorScale } from "evergreen-ui";
 import Image from "next/image";
 import Container from "./container";
+import { PostFrontMatter } from "../providers/application/application.provider";
+import Link from "next/link";
 
-const Postings: FC<{
+interface PostingProps {
   invert?: boolean;
-  title: string;
-  body: string;
+  post: PostFrontMatter;
   image: string;
-}> = ({ title, body, image, invert }) => {
+}
+
+const Postings: FC<PostingProps> = ({ post, image, invert }) => {
   const Left = () => (
     <Pane>
-      <Heading size={900}>{title}</Heading>
-      <Paragraph size={500}>{body}</Paragraph>
+      <Link href={post.path}>
+        <Heading size={900}>{post.title}</Heading>
+      </Link>
+      <Link href={post.path}>
+        <Paragraph size={500}>{post.summary}</Paragraph>
+      </Link>
     </Pane>
   );
 
-  const Right = () => (
-    <Pane textAlign={invert ? "left" : "right"} border elevation={1}>
-      <Image
-        alt={image}
-        src={image}
-        width={1200}
-        height={600}
-        layout="responsive"
-        quality={100}
-        loading="lazy"
-      />
-    </Pane>
-  );
+  const Right = () => null;
+  // <Pane textAlign={invert ? "left" : "right"} border elevation={1}>
+  //   <Image
+  //     alt={image}
+  //     src={image}
+  //     width={60}
+  //     height={60}
+  //     layout="responsive"
+  //     quality={100}
+  //     loading="lazy"
+  //   />
+  // </Pane>
 
   const children = invert ? [Right, Left] : [Left, Right];
 
   return (
     <Pane
-      minHeight="70vh"
+      minHeight="15vh"
       background={invert ? "tint1" : "white"}
       paddingY={majorScale(8)}
       borderTop
@@ -47,11 +53,15 @@ const Postings: FC<{
           display="flex"
           alignItems="flex-start"
           justifyContent="space-between">
-          {children.map((Child, i) => (
+          <Pane width="50%" paddingX={majorScale(3)}>
+            <Left />
+          </Pane>
+
+          {/* {children.map((Child, i) => (
             <Pane key={i} width="50%" paddingX={majorScale(3)}>
               <Child />
             </Pane>
-          ))}
+          ))} */}
         </Pane>
       </Container>
     </Pane>
