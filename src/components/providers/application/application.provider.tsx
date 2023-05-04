@@ -4,6 +4,7 @@ export interface PostFrontMatter<DateType = string> {
   id: string;
   title: string;
   slug: string;
+  path: string;
   summary: string;
   publishedOn: DateType;
   revisedOn: DateType;
