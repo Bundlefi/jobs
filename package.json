@@ -14,7 +14,7 @@
     "@types/react-dom": "^18.2.3",
     "evergreen-ui": "^7.1.7",
     "gray-matter": "^4.0.3",
-    "next": "^13.3.4",
+    "next": "^13.5.0",
     "next-mdx-remote": "^4.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
